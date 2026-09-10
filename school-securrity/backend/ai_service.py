@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 from dotenv import dotenv_values
@@ -8,15 +9,18 @@ from google import genai
 # LOAD GEMINI API KEY
 # =====================================================
 
-ENV_FILE = Path(__file__).resolve().parent / ".env"
+BASE_DIR = Path(__file__).resolve().parent
+ENV_FILE = BASE_DIR / ".env"
 
 config = dotenv_values(ENV_FILE)
 
-GEMINI_API_KEY = config.get("GEMINI_API_KEY")
+GEMINI_API_KEY = (
+    os.getenv("GEMINI_API_KEY")
+    or config.get("GEMINI_API_KEY")
+)
 
 if not GEMINI_API_KEY:
-    raise ValueError("GEMINI_API_KEY is missing in .env")
-
+    raise ValueError("GEMINI_API_KEY is missing")
 
 # =====================================================
 # CREATE GEMINI CLIENT
